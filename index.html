@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>월령 사령 계산기 - 당신의 숨겨진 재능을 발견하세요</title>
+    <meta name="description" content="생년월일로 알아보는 나만의 타고난 재능과 성격 분석">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+            font-size: 15px;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        .result-section {
+            display: none;
+        }
+
+        .personal-greeting {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .accuracy-indicator {
+            background: #fff7e6;
+            border: 2px solid #ffd093;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .accuracy-score {
+            font-size: 36px;
+            font-weight: 700;
+            color: #f39c12;
+            margin-bottom: 5px;
+        }
+
+        .accuracy-text {
+            font-size: 14px;
+            color: #d68910;
+        }
+
+        .result-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .element-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: white;
+        }
+
+        .wood { background: #4CAF50; }
+        .fire { background: #F44336; }
+        .earth { background: #8D6E63; }
+        .metal { background: #607D8B; }
+        .water { background: #2196F3; }
+
+        .result-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .result-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .traits-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .trait-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s ease;
+        }
+
+        .trait-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .trait-emoji {
+            font-size: 28px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .detailed-info {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 20px;
+        }
+
+        .info-section {
+            margin-bottom: 25px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .info-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .info-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 18px;
+        }
+
+        .info-content {
+            color: #555;
+            line-height: 1.8;
+            font-size: 15px;
+        }
+
+        .highlight {
+            background: linear-gradient(to bottom, transparent 50%, #ffd93d 50%);
+            padding: 0 2px;
+            font-weight: 600;
+        }
+
+        .question-box {
+            background: #e8f5e9;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .question-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .question-item {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #2e7d32;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .question-item:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .special-message {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+            margin-top: 20px;
+            font-size: 15px;
+        }
+
+        .share-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px dashed #e9ecef;
+            text-align: center;
+        }
+
+        .share-text {
+            margin-bottom: 20px;
+            color: #666;
+            font-size: 15px;
+        }
+
+        .share-text strong {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .instagram-share-btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .instagram-share-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(228, 64, 95, 0.4);
+        }
+
+        .copy-link-btn {
+            display: inline-block;
+            padding: 12px 25px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .copy-link-btn:hover {
+            background: #5a6268;
+        }
+
+        .copy-success {
+            color: #28a745;
+            font-size: 14px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .recalculate-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: #f0f0f0;
+            color: #666;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .recalculate-btn:hover {
+            background: #e0e0e0;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid #f0f0f0;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-message {
+            font-size: 16px;
+            color: #666;
+            margin: 8px 0;
+            opacity: 0;
+            animation: fadeInOut 2s ease infinite;
+        }
+
+        .loading-message:nth-child(1) { animation-delay: 0s; }
+        .loading-message:nth-child(2) { animation-delay: 0.7s; }
+        .loading-message:nth-child(3) { animation-delay: 1.4s; }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 8px;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .header {
+                padding: 30px 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔮 월령 사령 계산기</h1>
+            <p>당신만이 가진 특별한 재능을 발견하세요</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <label for="name">이름 (선택사항)</label>
+                    <input type="text" id="name" placeholder="이름을 입력하면 더 정확한 분석이 가능해요">
+                </div>
+                
+                <div class="input-group">
+                    <label for="birthdate">생년월일</label>
+                    <input type="date" id="birthdate" required>
+                    <div class="error-message" id="error-message">올바른 날짜를 입력해주세요</div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="birthtime">태어난 시간대 (선택사항)</label>
+                    <select id="birthtime">
+                        <option value="">시간을 모르시면 선택하지 마세요</option>
+                        <option value="morning">새벽 (00:00 - 06:00)</option>
+                        <option value="early">아침 (06:00 - 12:00)</option>
+                        <option value="afternoon">오후 (12:00 - 18:00)</option>
+                        <option value="evening">저녁 (18:00 - 24:00)</option>
+                    </select>
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateWolryeong()">
+                    내 숨겨진 재능 확인하기
+                </button>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="loading-spinner"></div>
+                <div class="loading-messages">
+                    <p class="loading-message">✨ 당신의 생년월일을 분석중...</p>
+                    <p class="loading-message">🔮 타고난 재능을 찾고 있어요...</p>
+                    <p class="loading-message">🎉 놀라운 결과가 나왔네요!</p>
+                </div>
+            </div>
+            
+            <div class="result-section" id="result-section">
+                <!-- 결과가 여기에 동적으로 삽입됩니다 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 월령 데이터
+        const wolryeongData = {
+            '인월': {
+                periods: [
+                    { start: 1, end: 7, element: 'earth', deity: '무토' },
+                    { start: 8, end: 14, element: 'fire', deity: '병화' },
+                    { start: 15, end: 30, element: 'wood', deity: '갑목' }
+                ]
+            },
+            '묘월': {
+                periods: [
+                    { start: 1, end: 7, element: 'wood', deity: '을목' },
+                    { start: 8, end: 10, element: 'earth', deity: '기토' },
+                    { start: 11, end: 30, element: 'wood', deity: '을목' }
+                ]
+            },
+            '진월': {
+                periods: [
+                    { start: 1, end: 9, element: 'water', deity: '계수' },
+                    { start: 10, end: 12, element: 'wood', deity: '을목' },
+                    { start: 13, end: 30, element: 'earth', deity: '무토' }
+                ]
+            },
+            '사월': {
+                periods: [
+                    { start: 1, end: 7, element: 'metal', deity: '경금' },
+                    { start: 8, end: 30, element: 'fire', deity: '병화' }
+                ]
+            },
+            '오월': {
+                periods: [
+                    { start: 1, end: 10, element: 'fire', deity: '병화' },
+                    { start: 11, end: 19, element: 'earth', deity: '기토' },
+                    { start: 20, end: 30, element: 'fire', deity: '정화' }
+                ]
+            },
+            '미월': {
+                periods: [
+                    { start: 1, end: 9, element: 'fire', deity: '정화' },
+                    { start: 10, end: 12, element: 'wood', deity: '을목' },
+                    { start: 13, end: 30, element: 'earth', deity: '기토' }
+                ]
+            },
+            '신월': {
+                periods: [
+                    { start: 1, end: 7, element: 'earth', deity: '무토' },
+                    { start: 8, end: 14, element: 'fire', deity: '정화' },
+                    { start: 15, end: 30, element: 'metal', deity: '경금' }
+                ]
+            },
+            '유월': {
+                periods: [
+                    { start: 1, end: 10, element: 'metal', deity: '신금' },
+                    { start: 11, end: 20, element: 'fire', deity: '정화' },
+                    { start: 21, end: 30, element: 'metal', deity: '신금' }
+                ]
+            },
+            '술월': {
+                periods: [
+                    { start: 1, end: 9, element: 'metal', deity: '신금' },
+                    { start: 10, end: 12, element: 'fire', deity: '정화' },
+                    { start: 13, end: 30, element: 'earth', deity: '무토' }
+                ]
+            },
+            '해월': {
+                periods: [
+                    { start: 1, end: 7, element: 'wood', deity: '갑목' },
+                    { start: 8, end: 30, element: 'water', deity: '임수' }
+                ]
+            },
+            '자월': {
+                periods: [
+                    { start: 1, end: 30, element: 'water', deity: '계수' }
+                ]
+            },
+            '축월': {
+                periods: [
+                    { start: 1, end: 9, element: 'water', deity: '계수' },
+                    { start: 10, end: 12, element: 'metal', deity: '신금' },
+                    { start: 13, end: 30, element: 'earth', deity: '기토' }
+                ]
+            }
+        };
+
+        // 오행별 특성 데이터
+        const elementTraits = {
+            wood: {
+                name: '목(木)',
+                title: '무한성장형 인재',
+                nickname: '그로우어(Grower)',
+                catchphrase: '나는 매일 1%씩 성장한다',
+                traits: [
+                    { emoji: '🌱', text: '성장 지향' },
+                    { emoji: '📚', text: '학습 욕구' },
+                    { emoji: '🤝', text: '멘토링' },
+                    { emoji: '💡', text: '창의성' }
+                ],
+                hiddenTalent: '당신은 <span class="highlight">표면적으로는 조용해 보이지만</span>, 내면에는 엄청난 성장 욕구가 숨어있습니다. 특히 <span class="highlight">새로운 것을 배울 때 눈빛이 반짝</span>이는 당신을 주변 사람들은 이미 알고 있죠.',
+                personality: '당신은 겉으로는 차분하고 신중해 보이지만, <span class="highlight">마음속에는 끊임없는 호기심</span>이 불타고 있습니다. 때로는 자신도 모르게 <span class="highlight">남들을 가르치고 있는 자신</span>을 발견하곤 하죠. 이것이 바로 당신의 타고난 재능입니다.',
+                career: '교육자, 컨설턴트, 기획자, 창업가, 라이프코치',
+                success: '20대: 다양한 경험을 스펀지처럼 흡수 / 30대: 자신만의 전문 분야 구축 / 40대: 후배들의 롤모델이 되어 영향력 확대',
+                questions: [
+                    '최근 누군가에게 무언가를 가르쳐주고 뿌듯함을 느낀 적이 있나요?',
+                    '새로운 분야를 배울 때 남들보다 빨리 습득한다는 말을 들어본 적이 있나요?',
+                    '혼자 있을 때도 무언가를 계속 배우고 싶은 충동을 느끼시나요?',
+                    '다른 사람의 성장을 보면서 대리만족을 느끼신 적이 있나요?'
+                ],
+                specialMessage: '당신처럼 목(木) 기운을 가진 사람은 전체 인구의 18%에 불과합니다. 특별한 당신이에요!',
+                className: 'wood'
+            },
+            fire: {
+                name: '화(火)',
+                title: '스포트라이트형 인재',
+                nickname: '샤이너(Shiner)',
+                catchphrase: '내가 있는 곳이 무대다',
+                traits: [
+                    { emoji: '🔥', text: '열정적' },
+                    { emoji: '⭐', text: '카리스마' },
+                    { emoji: '🎭', text: '표현력' },
+                    { emoji: '🎨', text: '예술성' }
+                ],
+                hiddenTalent: '당신은 <span class="highlight">평소에는 내성적인 척</span>하지만, 사실 내면에는 <span class="highlight">무대에 서고 싶은 욕구</span>가 강합니다. 친한 사람들 앞에서는 완전히 다른 모습을 보이죠.',
+                personality: '겉으로는 조용하고 수줍어 보일 수 있지만, <span class="highlight">당신의 내면에는 뜨거운 열정</span>이 숨어있습니다. 가끔 자신도 놀랄 정도로 <span class="highlight">과감한 행동</span>을 하곤 하죠. 이런 이중적인 매력이 바로 당신의 강점입니다.',
+                career: '크리에이터, 마케터, 예술가, 방송인, 인플루언서',
+                success: '20대: 자신만의 색깔 찾기 / 30대: 개성을 브랜드화 / 40대: 많은 사람들에게 영향력 행사',
+                questions: [
+                    '사람들 앞에서 발표할 때 긴장되면서도 묘한 쾌감을 느끼시나요?',
+                    '친구들이 당신을 "숨은 끼가 많다"고 평가한 적이 있나요?',
+                    'SNS에 올린 게시물의 반응을 자주 확인하시나요?',
+                    '혼자 있을 때 상상 속에서 무대에 서는 자신을 그려본 적이 있나요?'
+                ],
+                specialMessage: '화(火) 기운을 가진 당신은 타고난 스타성을 지녔어요. 이런 재능은 100명 중 15명만이 가지고 있답니다!',
+                className: 'fire'
+            },
+            earth: {
+                name: '토(土)',
+                title: '든든한 기둥형 인재',
+                nickname: '앵커(Anchor)',
+                catchphrase: '흔들리지 않는 중심이 되어라',
+                traits: [
+                    { emoji: '🏢', text: '안정성' },
+                    { emoji: '⚖️', text: '균형감' },
+                    { emoji: '🤝', text: '신뢰성' },
+                    { emoji: '📋', text: '체계성' }
+                ],
+                hiddenTalent: '당신은 <span class="highlight">겉으로는 평범해 보이지만</span>, 위기 상황에서 <span class="highlight">놀라운 침착함</span>을 발휘합니다. 주변 사람들이 당신을 찾는 이유가 바로 여기에 있죠.',
+                personality: '때로는 자신이 지루한 사람이라고 생각할 수 있지만, <span class="highlight">당신의 일관성과 신뢰성</span>은 매우 귀중한 재능입니다. 당신은 <span class="highlight">폭풍 속에서도 흔들리지 않는 등대</span>같은 존재예요.',
+                career: 'CEO, 프로젝트 매니저, 공무원, 회계사, 부동산 전문가',
+                success: '20대: 탄탄한 기초 다지기 / 30대: 조직의 핵심 인재로 성장 / 40대: 많은 사람들의 든든한 버팀목',
+                questions: [
+                    '친구들이 고민이 있을 때 주로 당신을 찾아오나요?',
+                    '계획을 세우고 차근차근 실행하는 것을 좋아하시나요?',
+                    '급작스러운 변화보다는 안정적인 환경을 선호하시나요?',
+                    '다른 사람들이 당신을 "믿음직스럽다"고 표현한 적이 있나요?'
+                ],
+                specialMessage: '토(土)의 기운을 가진 당신은 조직의 허리같은 존재예요. 이런 인재는 정말 귀하답니다!',
+                className: 'earth'
+            },
+            metal: {
+                name: '금(金)',
+                title: '완벽주의형 인재',
+                nickname: '마스터(Master)',
+                catchphrase: '1mm의 오차도 용납할 수 없다',
+                traits: [
+                    { emoji: '⚙️', text: '정밀함' },
+                    { emoji: '🔬', text: '분석력' },
+                    { emoji: '💻', text: '기술력' },
+                    { emoji: '🎯', text: '완벽추구' }
+                ],
+                hiddenTalent: '당신은 <span class="highlight">사소한 디테일도 놓치지 않는</span> 특별한 능력이 있습니다. 남들이 대충 넘어가는 부분에서 <span class="highlight">문제를 발견하는 당신</span>은 진정한 전문가의 자질을 갖췄어요.',
+                personality: '겉으로는 까다로워 보일 수 있지만, 그것은 <span class="highlight">최고를 추구하는 당신의 본능</span>입니다. 당신은 <span class="highlight">"대충"이라는 단어를 모르는</span> 사람이며, 이것이 당신을 특별하게 만듭니다.',
+                career: '개발자, 의사, 연구원, 품질관리 전문가, 데이터 분석가',
+                success: '20대: 전문 기술 완벽 습득 / 30대: 업계 최고 전문가로 인정 / 40대: 후배들의 기준이 되는 마스터',
+                questions: [
+                    '작은 실수나 오류를 발견하면 그냥 넘어가기 힘드신가요?',
+                    '무언가를 할 때 "제대로" 하지 않으면 불편함을 느끼시나요?',
+                    '다른 사람들이 당신을 "꼼꼼하다"고 평가하나요?',
+                    '완성도 높은 결과물을 만들 때 큰 만족감을 느끼시나요?'
+                ],
+                specialMessage: '금(金)의 기운을 가진 당신은 0.1%의 차이를 만들어내는 사람이에요. 이런 재능은 매우 희귀합니다!',
+                className: 'metal'
+            },
+            water: {
+                name: '수(水)',
+                title: '통찰력형 인재',
+                nickname: '세이지(Sage)',
+                catchphrase: '본질을 꿰뚫어 보는 자',
+                traits: [
+                    { emoji: '💧', text: '통찰력' },
+                    { emoji: '🧠', text: '지혜' },
+                    { emoji: '📊', text: '분석력' },
+                    { emoji: '🔍', text: '탐구심' }
+                ],
+                hiddenTalent: '당신은 <span class="highlight">말하지 않아도 상황을 파악하는</span> 놀라운 직관력이 있습니다. 복잡한 상황에서도 <span class="highlight">핵심을 한 번에 짚어내는</span> 당신의 능력은 타고난 것이죠.',
+                personality: '조용하고 관찰력이 뛰어난 당신은 <span class="highlight">물처럼 유연하면서도 깊이가 있는</span> 사람입니다. 때로는 <span class="highlight">미래를 예측하는 듯한</span> 당신의 통찰력에 주변 사람들이 놀라곤 하죠.',
+                career: '전략가, 분석가, 심리상담사, 작가, 투자전문가',
+                success: '20대: 깊이 있는 지식 축적 / 30대: 통찰력으로 문제 해결 / 40대: 지혜로운 조언자로 존경받음',
+                questions: [
+                    '복잡한 상황에서도 핵심을 빠르게 파악하시나요?',
+                    '다른 사람의 감정이나 의도를 쉽게 읽어내시나요?',
+                    '깊이 생각하는 것을 즐기시나요?',
+                    '직감이 맞아떨어진 경험이 자주 있으신가요?'
+                ],
+                specialMessage: '수(水)의 기운을 가진 당신은 현자의 지혜를 타고났어요. 이런 통찰력은 천 명 중 한 명꼴로 나타납니다!',
+                className: 'water'
+            }
+        };
+
+        function calculateWolryeong() {
+            const nameInput = document.getElementById('name');
+            const birthdateInput = document.getElementById('birthdate');
+            const birthtimeInput = document.getElementById('birthtime');
+            const birthdate = new Date(birthdateInput.value);
+            
+            if (!birthdateInput.value) {
+                showError('생년월일을 입력해주세요');
+                return;
+            }
+
+            hideError();
+            showLoading();
+
+            setTimeout(() => {
+                const month = birthdate.getMonth() + 1;
+                const day = birthdate.getDate();
+                const name = nameInput.value || '당신';
+                const birthtime = birthtimeInput.value;
+                
+                // 월령 계산
+                const wolryeong = getWolryeong(month, day);
+                const dayFromStart = getDayFromStart(month, day, wolryeong);
+                const saryeong = getSaryeong(wolryeong, dayFromStart);
+                
+                // 추가 개인화 요소
+                const accuracy = calculateAccuracy(name, birthtime);
+                
+                displayResult(saryeong, birthdate, name, accuracy);
+                hideLoading();
+            }, 2500);
+        }
+
+        function calculateAccuracy(name, birthtime) {
+            let base = 87;
+            if (name) base += 5;
+            if (birthtime) base += 4;
+            // 약간의 랜덤성 추가
+            base += Math.floor(Math.random() * 4);
+            return Math.min(base, 98);
+        }
+
+        function getWolryeong(month, day) {
+            // 간단화된 월령 매핑
+            const monthToWolryeong = {
+                1: day < 5 ? '축월' : '인월',
+                2: day < 4 ? '인월' : '묘월',
+                3: day < 5 ? '묘월' : '진월',
+                4: day < 4 ? '진월' : '사월',
+                5: day < 5 ? '사월' : '오월',
+                6: day < 5 ? '오월' : '미월',
+                7: day < 7 ? '미월' : '신월',
+                8: day < 7 ? '신월' : '유월',
+                9: day < 7 ? '유월' : '술월',
+                10: day < 8 ? '술월' : '해월',
+                11: day < 7 ? '해월' : '자월',
+                12: day < 7 ? '자월' : '축월'
+            };
+            
+            return monthToWolryeong[month];
+        }
+
+        function getDayFromStart(month, day, wolryeong) {
+            const termDays = {
+                '인월': 4, '묘월': 5, '진월': 4, '사월': 5,
+                '오월': 5, '미월': 7, '신월': 7, '유월': 7,
+                '술월': 8, '해월': 7, '자월': 7, '축월': 5
+            };
+            
+            if (month === 1 && wolryeong === '축월') {
+                return day;
+            }
+            
+            return day - termDays[wolryeong] + 1;
+        }
+
+        function getSaryeong(wolryeong, dayFromStart) {
+            const periods = wolryeongData[wolryeong].periods;
+            
+            for (let period of periods) {
+                if (dayFromStart >= period.start && dayFromStart <= period.end) {
+                    return {
+                        element: period.element,
+                        deity: period.deity,
+                        wolryeong: wolryeong
+                    };
+                }
+            }
+            
+            // 기본값
+            return periods[periods.length - 1];
+        }
+
+        function displayResult(saryeong, birthdate, name, accuracy) {
+            const traits = elementTraits[saryeong.element];
+            const resultHTML = `
+                <div class="personal-greeting">
+                    🎉 ${name}님의 숨겨진 재능을 발견했어요!
+                </div>
+                
+                <div class="accuracy-indicator">
+                    <div class="accuracy-score">${accuracy}%</div>
+                    <div class="accuracy-text">정확도 (${name}님의 정보 기반)</div>
+                </div>
+                
+                <div class="result-card">
+                    <span class="element-badge ${traits.className}">${traits.name} 사령</span>
+                    <h2 class="result-title">${traits.title}</h2>
+                    <p class="result-subtitle">"${traits.catchphrase}"</p>
+                    
+                    <div class="traits-grid">
+                        ${traits.traits.map((trait, index) => `
+                            <div class="trait-item">
+                                <span class="trait-emoji">${trait.emoji}</span>
+                                <div>${trait.text}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div class="detailed-info">
+                        <div class="info-section">
+                            <h3 class="info-title">🔮 ${name}님의 숨겨진 재능</h3>
+                            <p class="info-content">${traits.hiddenTalent}</p>
+                        </div>
+                        
+                        <div class="info-section">
+                            <h3 class="info-title">🧠 진짜 성격</h3>
+                            <p class="info-content">${traits.personality}</p>
+                        </div>
+                        
+                        <div class="question-box">
+                            <h3 class="question-title">💭 혹시 이런 경험이 있으신가요?</h3>
+                            ${traits.questions.map(q => `
+                                <div class="question-item">${q}</div>
+                            `).join('')}
+                        </div>
+                        
+                        <div class="info-section">
+                            <h3 class="info-title">💼 천직</h3>
+                            <p class="info-content">${traits.career}</p>
+                        </div>
+                        
+                        <div class="info-section">
+                            <h3 class="info-title">🎯 인생 로드맵</h3>
+                            <p class="info-content">${traits.success}</p>
+                        </div>
+                        
+                        <div class="special-message">
+                            ${traits.specialMessage.replace(/<span class="highlight">/g, '<strong>').replace(/<\/span>/g, '</strong>')}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="share-section">
+                    <div class="share-text">
+                        친구들도 숨겨진 재능이 궁금하지 않을까요?<br>
+                        <strong>${name}님의 결과를 공유해보세요!</strong>
+                    </div>
+                    
+                    <a href="https://www.instagram.com/zxuku17" target="_blank" class="instagram-share-btn">
+                        📷 인스타그램에서 더 많은 정보 보기
+                    </a>
+                    
+                    <button class="copy-link-btn" onclick="copyLink()">
+                        🔗 링크 복사하기
+                    </button>
+                    
+                    <div class="copy-success" id="copy-success">
+                        ✅ 링크가 복사되었어요!
+                    </div>
+                </div>
+                
+                <button class="recalculate-btn" onclick="resetCalculator()">
+                    다른 사람 재능 확인하기
+                </button>
+            `;
+            
+            document.getElementById('result-section').innerHTML = resultHTML;
+            document.getElementById('result-section').style.display = 'block';
+            document.querySelector('.input-section').style.display = 'none';
+        }
+
+        function showLoading() {
+            document.getElementById('loading').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loading').style.display = 'none';
+        }
+
+        function showError(message) {
+            document.getElementById('error-message').textContent = message;
+            document.getElementById('error-message').style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('error-message').style.display = 'none';
+        }
+
+        function resetCalculator() {
+            document.getElementById('result-section').style.display = 'none';
+            document.querySelector('.input-section').style.display = 'block';
+            document.getElementById('name').value = '';
+            document.getElementById('birthdate').value = '';
+            document.getElementById('birthtime').value = '';
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function copyLink() {
+            const url = window.location.href;
+            navigator.clipboard.writeText(url).then(() => {
+                document.getElementById('copy-success').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('copy-success').style.display = 'none';
+                }, 3000);
+            });
+        }
+
+        // 오늘 날짜를 최대값으로 설정
+        document.getElementById('birthdate').max = new Date().toISOString().split('T')[0];
+    </script>
+</body>
+</html>
